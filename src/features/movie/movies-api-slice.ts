@@ -10,16 +10,19 @@ interface Data {
     poster_path: string;
     release_date: string;
   }[];
+  total_pages: number;
 }
 
 interface Response {
   page: number;
   results: {
     id: number;
+    adult: boolean;
     original_title: string;
     poster_path: string;
     release_date: string;
   }[];
+  total_pages: number;
 }
 
 interface MovieDetails {
@@ -55,17 +58,29 @@ export const apiSlice = createApi({
   }),
   endpoints(builder) {
     return {
-      fetchMovies: builder.query<Data, number>({
-        query(page = 1) {
-          return `movie/popular?page=${page}`;
+      fetchMovies: builder.query<
+        Data,
+        {
+          page: number;
+          search?: string;
+        }
+      >({
+        query({ page, search }) {
+          if (search && search.length > 0) {
+            return `search/movie?language=en-US&query=${search}&page=${page}&include_adult=false`;
+          } else {
+            return `movie/popular?language=en-US&page=${page}`;
+          }
         },
         transformResponse(response: Response) {
-          const { page, results } = response;
-          const movies = results.map((movie) => {
-            const { original_title, poster_path, release_date, id } = movie;
-            return { original_title, poster_path, release_date, id };
-          });
-          return { page, data: movies };
+          const { page, results, total_pages } = response;
+          const movies = results
+            .filter((movie) => movie.adult === false)
+            .map((movie) => {
+              const { original_title, poster_path, release_date, id } = movie;
+              return { original_title, poster_path, release_date, id };
+            });
+          return { page, data: movies, total_pages };
         },
       }),
       fetchMovie: builder.query<MovieDetails, string>({

@@ -63,23 +63,23 @@ export const apiSlice = createApi({
         {
           page: number;
           search?: string;
+          genres?: string;
+          rating?: number;
         }
       >({
-        query({ page, search }) {
+        query({ page, search, genres, rating }) {
           if (search && search.length > 0) {
             return `search/movie?language=en-US&query=${search}&page=${page}&include_adult=false`;
           } else {
-            return `movie/popular?language=en-US&page=${page}`;
+            return `/discover/movie?language=en-US&page=${page}&include_adult=false&sort_by=popularity.desc&with_genres=${genres}&vote_average.gte=${rating}`;
           }
         },
         transformResponse(response: Response) {
           const { page, results, total_pages } = response;
-          const movies = results
-            .filter((movie) => movie.adult === false)
-            .map((movie) => {
-              const { original_title, poster_path, release_date, id } = movie;
-              return { original_title, poster_path, release_date, id };
-            });
+          const movies = results.map((movie) => {
+            const { original_title, poster_path, release_date, id } = movie;
+            return { original_title, poster_path, release_date, id };
+          });
           return { page, data: movies, total_pages };
         },
       }),
@@ -88,42 +88,35 @@ export const apiSlice = createApi({
           return `movie/${id}?language=en-US`;
         },
         transformResponse(response: MovieDetails) {
-          const {
-            original_title,
-            release_date,
-            runtime,
-            genres,
-            overview,
-            tagline,
-            imdb_id,
-            production_companies,
-            production_countries,
-            budget,
-            revenue,
-            homepage,
-            backdrop_path,
-            poster_path,
-          } = response;
           return {
-            original_title,
-            release_date,
-            runtime,
-            genres,
-            overview,
-            tagline,
-            imdb_id,
-            production_companies,
-            production_countries,
-            budget,
-            revenue,
-            homepage,
-            backdrop_path,
-            poster_path,
+            original_title: response.original_title,
+            release_date: response.release_date,
+            runtime: response.runtime,
+            genres: response.genres,
+            overview: response.overview,
+            tagline: response.tagline,
+            imdb_id: response.imdb_id,
+            production_companies: response.production_companies,
+            production_countries: response.production_countries,
+            budget: response.budget,
+            revenue: response.revenue,
+            homepage: response.homepage,
+            backdrop_path: response.backdrop_path,
+            poster_path: response.poster_path,
           };
+        },
+      }),
+      fetchGenres: builder.query<
+        { genres: { id: number; name: string }[] },
+        void
+      >({
+        query() {
+          return `genre/movie/list?language=en-US`;
         },
       }),
     };
   },
 });
 
-export const { useFetchMoviesQuery, useFetchMovieQuery } = apiSlice;
+export const { useFetchMoviesQuery, useFetchMovieQuery, useFetchGenresQuery } =
+  apiSlice;

@@ -14,7 +14,7 @@ function HomePage() {
   });
 
   return (
-    <div className="mx-auto w-full p-[2rem] max-sm:p-[1rem] space-y-4">
+    <div className="mx-auto w-full px-[2rem] max-sm:px-[1rem] pb-[2rem] max-sm:pb-[1rem] space-y-4">
       <SearchForm value={searchParams.get("search") || ""} />
       {isLoading && <GridSkeleton />}
       {data && (

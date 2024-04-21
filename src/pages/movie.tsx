@@ -24,11 +24,8 @@ export default function Movie() {
   const params = useParams();
 
   const { data, isLoading } = useFetchMovieQuery(params.id!);
-  // const isLg = useMediaQuery("(min-width: 1250px)");
-  // const isSm = useMediaQuery("(min-width: 640px)");
-
   return (
-    <div className="relative mx-auto w-full p-[2rem] max-sm:p-[1rem] space-y-4">
+    <div className="relative mx-auto w-full px-[2rem] max-sm:px-[1rem] pb-[2rem] max-sm:pb-[1rem] space-y-4">
       <div
         className="absolute inset-0 min-h-screen bg-opacity-70 bg-gradient-to-b from-gray-900 to-transparent dark:from-black dark:to-transparent"
         style={{

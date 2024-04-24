@@ -1,12 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { apiSlice } from "@/features/movie/movies-api-slice";
+import { movieApiSlice } from "@/features/movie/movies-api-slice";
+import { preferencesApiSlice } from "@/features/preferences/preferences-api-slice";
 
 export const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    [movieApiSlice.reducerPath]: movieApiSlice.reducer,
+    [preferencesApiSlice.reducerPath]: preferencesApiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat(apiSlice.middleware);
+    return getDefaultMiddleware().concat([
+      movieApiSlice.middleware,
+      preferencesApiSlice.middleware,
+    ]);
   },
 });
 

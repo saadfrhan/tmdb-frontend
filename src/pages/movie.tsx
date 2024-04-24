@@ -1,4 +1,3 @@
-import BackButton from "@/components/back-button";
 import { useFetchMovieQuery } from "@/features/movie/movies-api-slice";
 import { useParams } from "react-router-dom";
 import { intervalToDuration } from "date-fns";
@@ -26,18 +25,8 @@ export default function Movie() {
   const { data, isLoading } = useFetchMovieQuery(params.id!);
   return (
     <div className="relative mx-auto w-full px-[2rem] max-sm:px-[1rem] pb-[2rem] max-sm:pb-[1rem] space-y-4">
-      <div
-        className="absolute inset-0 min-h-screen bg-opacity-70 bg-gradient-to-b from-gray-900 to-transparent dark:from-black dark:to-transparent"
-        style={{
-          backgroundImage: `url(https://image.tmdb.org/t/p/w1280${data?.backdrop_path})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          zIndex: -1,
-          backgroundRepeat: "no-repeat",
-        }}
-      />
+      <div className="absolute inset-0 min-h-screen" />
 
-      <BackButton />
       {isLoading && <GridSkeletonMovie />}
       {data && (
         <div className="w-full gap-4 rounded-md relative z-10">

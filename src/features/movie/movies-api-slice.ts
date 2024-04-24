@@ -47,8 +47,8 @@ interface MovieDetails {
   poster_path: string | null;
 }
 
-export const apiSlice = createApi({
-  reducerPath: "api",
+export const movieApiSlice = createApi({
+  reducerPath: "movieApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://api.themoviedb.org/3/",
     prepareHeaders(headers) {
@@ -68,11 +68,16 @@ export const apiSlice = createApi({
         }
       >({
         query({ page, search, genres, rating }) {
-          if (search && search.length > 0) {
+          if (typeof search === "string") {
             return `search/movie?language=en-US&query=${search}&page=${page}&include_adult=false`;
-          } else {
-            return `/discover/movie?language=en-US&page=${page}&include_adult=false&sort_by=popularity.desc&with_genres=${genres}&vote_average.gte=${rating}`;
           }
+          const pageParam = page ? `&page=${page}` : "";
+          const genresParam = genres ? `&with_genres=${genres}` : "";
+          const ratingParam = rating ? `&vote_average.gte=${rating}` : "";
+          console.log(
+            `discover/movie?language=en-US${pageParam}&include_adult=false&sort_by=popularity.desc${genresParam}${ratingParam}`
+          );
+          return `discover/movie?language=en-US${pageParam}&include_adult=false&sort_by=popularity.desc${genresParam}${ratingParam}`;
         },
         transformResponse(response: Response) {
           const { page, results, total_pages } = response;
@@ -107,7 +112,12 @@ export const apiSlice = createApi({
         },
       }),
       fetchGenres: builder.query<
-        { genres: { id: number; name: string }[] },
+        {
+          genres: {
+            id: number;
+            name: string;
+          }[];
+        },
         void
       >({
         query() {
@@ -119,4 +129,4 @@ export const apiSlice = createApi({
 });
 
 export const { useFetchMoviesQuery, useFetchMovieQuery, useFetchGenresQuery } =
-  apiSlice;
+  movieApiSlice;

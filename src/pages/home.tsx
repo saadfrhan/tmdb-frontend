@@ -2,21 +2,30 @@ import GridSkeleton from "@/components/grid-skeleton";
 import SearchForm from "@/components/search-form";
 import { Button } from "@/components/ui/button";
 import { useFetchMoviesQuery } from "@/features/movie/movies-api-slice";
+import { useGetPreferencesQuery } from "@/features/preferences/preferences-api-slice";
+import { useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 function HomePage() {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
+  const { user } = useUser();
+  const { data: prefData } = useGetPreferencesQuery(user?.id || "");
   const { data, isLoading } = useFetchMoviesQuery({
     page,
-    search: searchParams.get("search") || "",
+    search: searchParams.get("search") || undefined,
+    genres: prefData?.genres.map((genre) => genre.id).join("|") || undefined,
+    rating: prefData?.rating || 0,
   });
 
   return (
     <div className="mx-auto w-full px-[2rem] max-sm:px-[1rem] pb-[2rem] max-sm:pb-[1rem] space-y-4">
       <SearchForm value={searchParams.get("search") || ""} />
       {isLoading && <GridSkeleton />}
+      {prefData && (prefData.genres.length === 0 || prefData.rating) && (
+        <p>Preferences applied</p>
+      )}
       {data && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {data?.data.map((movie) => (

@@ -3,11 +3,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const preferencesApiSlice = createApi({
   reducerPath: "prefApi",
   baseQuery: fetchBaseQuery({
-    credentials: "same-origin",
     baseUrl:
       process.env.NODE_ENV === "production"
         ? "https://tmdb-backend-ruby.vercel.app"
         : "http://localhost:3000",
+    prepareHeaders(headers) {
+      headers.set("Access-Control-Allow-Origin", "*");
+      return headers;
+    },
   }),
   endpoints(builder) {
     return {

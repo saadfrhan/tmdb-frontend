@@ -5,7 +5,7 @@ export const preferencesApiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl:
       process.env.NODE_ENV === "production"
-        ? "http://tmdb-backend-ruby.vercel.app"
+        ? "https://tmdb-backend-ruby.vercel.app"
         : "http://localhost:3000",
     prepareHeaders(headers) {
       headers.set("Access-Control-Allow-Origin", "*");

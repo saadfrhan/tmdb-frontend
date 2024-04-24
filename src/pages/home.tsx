@@ -4,14 +4,15 @@ import { Button } from "@/components/ui/button";
 import { useFetchMoviesQuery } from "@/features/movie/movies-api-slice";
 import { useGetPreferencesQuery } from "@/features/preferences/preferences-api-slice";
 import { useUser } from "@clerk/clerk-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 function HomePage() {
   const [page, setPage] = useState(1);
   const [searchParams] = useSearchParams();
+  const [skip, setSkip] = useState(true);
   const { user } = useUser();
-  const { data: prefData } = useGetPreferencesQuery(user?.id || "");
+  const { data: prefData } = useGetPreferencesQuery(user?.id || "", { skip });
   const { data, isLoading } = useFetchMoviesQuery({
     page,
     search: searchParams.get("search") || undefined,
@@ -19,8 +20,15 @@ function HomePage() {
     rating: prefData?.rating || 0,
   });
 
+  useEffect(() => {
+    if (user && user.id) {
+      setSkip(false);
+      return;
+    }
+  }, [user]);
+
   return (
-    <div className="mx-auto w-full px-[2rem] max-sm:px-[1rem] pb-[2rem] max-sm:pb-[1rem] space-y-4">
+    <div className="mx-auto w-full px-[2rem] max-sm:px-[1rem] pb-[2rem] max-sm:pb-[1rem] space-y-2">
       <SearchForm value={searchParams.get("search") || ""} />
       {isLoading && <GridSkeleton />}
       {prefData && (prefData.genres.length === 0 || prefData.rating) && (
@@ -28,12 +36,8 @@ function HomePage() {
       )}
       {data && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {data?.data.map((movie) => (
-            <Link
-              to={`/movie/${movie.id}`}
-              key={movie.original_title}
-              className="rounded-md"
-            >
+          {data?.data.map((movie, index) => (
+            <Link to={`/movie/${movie.id}`} key={index} className="rounded-md">
               <img
                 className="w-full rounded-md"
                 loading="lazy"

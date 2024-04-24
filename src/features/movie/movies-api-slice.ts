@@ -74,9 +74,6 @@ export const movieApiSlice = createApi({
           const pageParam = page ? `&page=${page}` : "";
           const genresParam = genres ? `&with_genres=${genres}` : "";
           const ratingParam = rating ? `&vote_average.gte=${rating}` : "";
-          console.log(
-            `discover/movie?language=en-US${pageParam}&include_adult=false&sort_by=popularity.desc${genresParam}${ratingParam}`
-          );
           return `discover/movie?language=en-US${pageParam}&include_adult=false&sort_by=popularity.desc${genresParam}${ratingParam}`;
         },
         transformResponse(response: Response) {

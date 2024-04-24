@@ -4,6 +4,7 @@ import { intervalToDuration } from "date-fns";
 import ImdbIcon from "@/icons/ImdbIcon";
 import { Badge } from "@/components/ui/badge";
 import GridSkeletonMovie from "@/components/grid-skeleton-movie";
+import { useMediaQuery } from "usehooks-ts";
 
 const USDollar = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -21,6 +22,7 @@ function formatDuration(duration: number) {
 
 export default function Movie() {
   const params = useParams();
+  const isMaxMd = useMediaQuery("(max-width: 768px)");
 
   const { data, isLoading } = useFetchMovieQuery(params.id!);
   return (
@@ -33,7 +35,13 @@ export default function Movie() {
           <div className="grid grid-cols-[0.5fr,2fr] max-[1250px]:grid-cols-1 gap-4 w-full rounded-md">
             <img
               className="rounded-md h-full w-[30rem] max-[1250px]:w-full"
-              src={`https://image.tmdb.org/t/p/w500${data.poster_path}`}
+              src={
+                isMaxMd
+                  ? data.backdrop_path
+                    ? `https://image.tmdb.org/t/p/w1280${data?.backdrop_path}`
+                    : `https://image.tmdb.org/t/p/w1280${data.poster_path}`
+                  : `https://image.tmdb.org/t/p/w500${data.poster_path}`
+              }
               alt={data.original_title}
             />
 

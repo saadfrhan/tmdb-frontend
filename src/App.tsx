@@ -18,31 +18,33 @@ function App() {
     <div>
       <header className="flex w-full justify-start px-[2rem] max-sm:px-[1rem] pt-[2rem] max-sm:pt-[1rem] pb-[1.5rem] max-sm:pb-[0.5rem] mx-auto">
         <div className="flex w-full justify-between">
-          <div className="flex gap-4 items-center">
+          <div className="flex w-full justify-between items-center">
             {pathname !== "/" && <BackButton />}
-            <SignedOut>
-              <Button>
-                <SignInButton />
-              </Button>
-            </SignedOut>
-            <SignedIn>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "rounded-full h-12 w-12",
-                  },
-                }}
-              />
-            </SignedIn>
+            <div className="flex items-center gap-3">
+              <SignedOut>
+                <Button>
+                  <SignInButton />
+                </Button>
+              </SignedOut>
+              <SignedIn>
+                <UserButton
+                  appearance={{
+                    elements: {
+                      avatarBox: "rounded-full h-12 w-12",
+                    },
+                  }}
+                />
+                <Link
+                  to="/settings"
+                  className={buttonVariants({
+                    size: "icon",
+                  })}
+                >
+                  <Settings2Icon />
+                </Link>
+              </SignedIn>
+            </div>
           </div>
-          <Link
-            to="/settings"
-            className={buttonVariants({
-              size: "icon",
-            })}
-          >
-            <Settings2Icon />
-          </Link>
         </div>
       </header>
       <Routes>

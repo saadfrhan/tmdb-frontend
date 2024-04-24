@@ -66,9 +66,7 @@ export default function SettingsPage() {
                   }
                 }}
                 variant={
-                  genres.some((g) => g.id === genre.id)
-                    ? "default"
-                    : "secondary"
+                  genres.some((g) => g.id === genre.id) ? "secondary" : "ghost"
                 }
               >
                 {genre.name}

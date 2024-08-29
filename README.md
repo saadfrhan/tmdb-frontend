@@ -1,4 +1,4 @@
-# MERN Movie App ([visit](https://tmdb-frontend-chi.vercel.app/))
+# MERN Movie App ([demo](https://tmdb-frontend-chi.vercel.app/), [backend](https://github.com/saadfrhan/tmdb-backend))
 
 ## Running Locally
 

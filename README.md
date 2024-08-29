@@ -3,16 +3,27 @@
 ## Running Locally
 
 ```bash
-mkdir client && cd client
-git clone https://github.com/saadfrhan/tmdb-frontend ./
+mkdir movie-app && cd movie-app
+
+git clone https://github.com/saadfrhan/tmdb-frontend client
+cd client
 pnpm install
 
-# .env file
+cd ..
+git clone https://github.com/saadfrhan/tmdb-backend server
+cd server
+pnpm install
+```
+
+```bash
+# .env file frontend
 VITE_TMDB_READ_ACCESS_TOKEN=""
 VITE_CLERK_PUBLISHABLE_KEY=""
 VITE_TMDB_API_KEY=""
 
-pnpm dev
+# .env file backend
+CLERK_SECRET_KEY=""
+DATABASE_URL=""
 ```
 
 # Contributing
